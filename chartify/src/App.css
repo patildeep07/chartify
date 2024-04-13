@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+body {
+  line-height: 1;
+}
