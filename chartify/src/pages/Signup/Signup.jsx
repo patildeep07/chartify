@@ -9,7 +9,8 @@ const Signup = () => {
     password: "",
   });
 
-  const signupHandler = () => {
+  const signupHandler = (e) => {
+    e.preventDefault();
     console.log({ userDetails });
     const signupMail = userDetails.email.replace(/\s/g, "");
     const signupPassword = userDetails.password.replace(/\s/g, "");
@@ -25,7 +26,10 @@ const Signup = () => {
   // UI
   return (
     <div>
-      <div className="mx-auto my-10 flex min-h-fit max-w-[90%] flex-col items-start justify-start gap-5 rounded-lg border border-gray-400 px-10 py-7 sm:max-w-fit">
+      <form
+        onSubmit={signupHandler}
+        className="mx-auto my-10 flex min-h-fit max-w-[90%] flex-col items-start justify-start gap-5 rounded-lg border border-gray-400 px-10 py-7 sm:max-w-fit"
+      >
         <h1 className="self-center text-2xl font-bold">Create your account</h1>
 
         <div className="flex flex-col  self-center ">
@@ -80,7 +84,8 @@ const Signup = () => {
         </div>
 
         <button
-          onClick={signupHandler}
+          type="submit"
+          value="submit"
           className="w-full self-center rounded-md bg-black px-5 py-2 tracking-wider text-white"
         >
           Sign up
@@ -94,7 +99,7 @@ const Signup = () => {
             <Link to={"/login"}>Login</Link>
           </span>
         </p>
-      </div>
+      </form>
     </div>
   );
 };
