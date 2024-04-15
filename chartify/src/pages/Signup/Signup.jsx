@@ -1,7 +1,11 @@
-import React, { memo, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../../context/AppProvider";
 
 const Signup = () => {
+  // UserContext
+  const { createNewUser } = useContext(AppContext);
+
   // Logic
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -11,7 +15,6 @@ const Signup = () => {
 
   const signupHandler = (e) => {
     e.preventDefault();
-    console.log({ userDetails });
     const signupMail = userDetails.email.replace(/\s/g, "");
     const signupPassword = userDetails.password.replace(/\s/g, "");
     const signupDetails = {
@@ -20,7 +23,13 @@ const Signup = () => {
       password: signupPassword,
     };
 
-    console.log({ signupDetails });
+    if (
+      signupMail.length &&
+      signupPassword.length &&
+      userDetails.name.length > 0
+    ) {
+      createNewUser(signupDetails);
+    }
   };
 
   // UI
