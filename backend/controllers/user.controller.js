@@ -14,5 +14,26 @@ const createUser = async (userDetails) => {
   }
 };
 
+// 2. User login
+const loginUser = async (userDetails) => {
+  try {
+    const { email, password } = userDetails;
+    const matchedUser = await User.findOne({ email });
+
+    if (matchedUser) {
+      if (matchedUser.password === password) {
+        return { message: "User successfully logged in!", user: matchedUser };
+      } else {
+        return { error: "Incorrect password!" };
+      }
+    } else {
+      return { error: "Email does not exists!" };
+    }
+  } catch (error) {
+    console.log(error);
+    return { error: "Unable to login!" };
+  }
+};
+
 // Exporting the controllers
-module.exports = { createUser };
+module.exports = { createUser, loginUser };

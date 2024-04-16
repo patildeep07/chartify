@@ -12,7 +12,8 @@ const LineChart = lazy(() => import("./pages/LineChart/LineChart"));
 const Signup = lazy(() => import("./pages/Signup/Signup"));
 
 function App() {
-  const { isLoggedIn } = useContext(AppContext);
+  const { appData } = useContext(AppContext);
+  const { isLoggedIn } = appData;
   return (
     <div className="App">
       <Header />

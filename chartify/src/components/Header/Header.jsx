@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { memo } from "react";
 import { NavLink } from "react-router-dom";
+import { AppContext } from "../../context/AppProvider";
 
 const Header = () => {
+  // Context
+  const { appData, dispatch } = useContext(AppContext);
+  const { isLoggedIn } = appData;
+
+  // Styles
   const activeStyles = ({ isActive }) =>
     isActive ? { color: "blue", fontWeight: "bold" } : { color: "black" };
   return (
@@ -19,12 +25,24 @@ const Header = () => {
             <NavLink style={activeStyles} to={"/"}>
               Home
             </NavLink>
-            <NavLink style={activeStyles} to={"/login"}>
-              Login
-            </NavLink>
-            <NavLink style={activeStyles} to={"/signup"}>
-              Signup
-            </NavLink>
+
+            {!isLoggedIn && (
+              <NavLink style={activeStyles} to={"/login"}>
+                Login
+              </NavLink>
+            )}
+
+            {!isLoggedIn && (
+              <NavLink style={activeStyles} to={"/signup"}>
+                Signup
+              </NavLink>
+            )}
+
+            {isLoggedIn && (
+              <NavLink onClick={() => dispatch({ type: "LOGOUT_USER" })}>
+                Logout
+              </NavLink>
+            )}
           </div>
         </div>
       </div>
@@ -32,4 +50,4 @@ const Header = () => {
   );
 };
 
-export default memo(Header);
+export default Header;
