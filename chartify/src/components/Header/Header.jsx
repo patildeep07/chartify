@@ -13,7 +13,7 @@ const Header = () => {
     isActive ? { color: "blue", fontWeight: "bold" } : { color: "black" };
   return (
     <div>
-      <div className="flex flex-col flex-wrap items-center justify-center gap-5 px-14 py-3 text-center sm:flex-row sm:flex-nowrap sm:items-baseline sm:justify-between sm:text-start">
+      <div className="flex border-b border-slate-800 flex-col flex-wrap items-center justify-center gap-5 px-14 py-3 text-center sm:flex-row sm:flex-nowrap sm:items-baseline sm:justify-between sm:text-start">
         <div className="flex-grow basis-full">
           <NavLink to={"/"}>
             <h1 className="cursor-pointer  text-3xl font-bold">Chartify</h1>
@@ -50,4 +50,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

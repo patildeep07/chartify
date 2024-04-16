@@ -7,6 +7,8 @@ export const AppContext = createContext();
 const initialState = {
   isLoggedIn: false,
   userDetails: {},
+  barChartData: [],
+  lineChartData: [],
 };
 
 export const AppProvider = ({ children }) => {
@@ -27,6 +29,12 @@ export const AppProvider = ({ children }) => {
           ...state,
           isLoggedIn: false,
           userDetails: {},
+        };
+
+      case "SET_BAR_CHART_DATA":
+        return {
+          ...state,
+          barChartData: action.payload,
         };
 
       default:
@@ -81,9 +89,51 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/posts");
+
+      if (response) {
+        const data = response.data.data;
+
+        // Processing data for bar chart
+        const barData = data.reduce(
+          (acc, curr) => {
+            return {
+              ...acc,
+              A: acc["A"] + Number(curr["A"]),
+              B: acc["B"] + Number(curr["B"]),
+              C: acc["C"] + Number(curr["C"]),
+              D: acc["D"] + Number(curr["D"]),
+              E: acc["E"] + Number(curr["E"]),
+              F: acc["F"] + Number(curr["F"]),
+            };
+          },
+          { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 }
+        );
+
+        const barDataLabels = Object.keys(barData);
+        const barDataValues = Object.values(barData).map((value) =>
+          (value / data.length).toFixed(0)
+        );
+
+        dispatch({
+          type: "SET_BAR_CHART_DATA",
+          payload: { barDataValues, barDataLabels },
+        });
+        // console.log({ barDataArray });
+
+        // Data for line chart
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <AppContext.Provider
-      value={{ appData, dispatch, createNewUser, loginUser }}
+      value={{ appData, dispatch, createNewUser, loginUser, fetchData }}
     >
       {children}
     </AppContext.Provider>
