@@ -39,6 +39,12 @@ const Header = () => {
             )}
 
             {isLoggedIn && (
+              <NavLink style={activeStyles} to={"/line-chart"}>
+                LineChart
+              </NavLink>
+            )}
+
+            {isLoggedIn && (
               <NavLink onClick={() => dispatch({ type: "LOGOUT_USER" })}>
                 Logout
               </NavLink>

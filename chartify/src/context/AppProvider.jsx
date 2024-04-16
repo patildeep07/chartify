@@ -8,14 +8,14 @@ const initialState = {
   isLoggedIn: false,
   userDetails: {},
   barChartData: [],
-  lineChartData: [],
+  lineChartData: {},
 };
 
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const reducerFunction = (state, action) => {
-    console.log({ state, action });
+    // console.log({ state, action });
     switch (action.type) {
       case "SET_USER":
         return {
@@ -35,6 +35,12 @@ export const AppProvider = ({ children }) => {
         return {
           ...state,
           barChartData: action.payload,
+        };
+
+      case "SET_LINE_CHART_DATA":
+        return {
+          ...state,
+          lineChartData: action.payload,
         };
 
       default:
@@ -125,6 +131,72 @@ export const AppProvider = ({ children }) => {
         // console.log({ barDataArray });
 
         // Data for line chart
+        const lineData = data.reduce(
+          (acc, curr) => {
+            if (acc.A[curr.Day]) {
+              return {
+                ...acc,
+                A: {
+                  ...acc.A,
+                  [curr.Day]: [...acc.A[curr.Day], curr.A],
+                },
+                B: {
+                  ...acc.B,
+                  [curr.Day]: [...acc.B[curr.Day], curr.B],
+                },
+                C: {
+                  ...acc.C,
+                  [curr.Day]: [...acc.C[curr.Day], curr.C],
+                },
+                D: {
+                  ...acc.D,
+                  [curr.Day]: [...acc.D[curr.Day], curr.D],
+                },
+                E: {
+                  ...acc.E,
+                  [curr.Day]: [...acc.E[curr.Day], curr.E],
+                },
+                F: {
+                  ...acc.F,
+                  [curr.Day]: [...acc.F[curr.Day], curr.F],
+                },
+              };
+            } else {
+              return {
+                ...acc,
+                A: {
+                  ...acc.A,
+                  [curr.Day]: [curr.A],
+                },
+                B: {
+                  ...acc.B,
+                  [curr.Day]: [curr.B],
+                },
+                C: {
+                  ...acc.C,
+                  [curr.Day]: [curr.C],
+                },
+                D: {
+                  ...acc.D,
+                  [curr.Day]: [curr.D],
+                },
+                E: {
+                  ...acc.E,
+                  [curr.Day]: [curr.E],
+                },
+                F: {
+                  ...acc.F,
+                  [curr.Day]: [curr.F],
+                },
+              };
+            }
+          },
+          { A: {}, B: {}, C: {}, D: {}, E: {}, F: {} }
+        );
+
+        dispatch({ type: "SET_LINE_CHART_DATA", payload: lineData });
+
+        // console.log({ lineData });
       }
     } catch (error) {
       console.log(error);
