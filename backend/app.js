@@ -19,6 +19,10 @@ app.use(helmet());
 const UserRouter = require("./routes/user.route");
 app.use("/users", UserRouter);
 
+// Importing post router
+const PostRouter = require("./routes/post.route");
+app.use("/posts", PostRouter);
+
 // Handling GET request
 app.get("/", (req, res) => {
   res.send("Hello");
