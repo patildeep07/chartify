@@ -27,8 +27,6 @@ postRouter.get("/", async (req, res) => {
   try {
     const data = await Post.find();
 
-    console.log({ data });
-
     res.status(200).json({ message: "Successfully fetched data!", data });
   } catch (error) {
     console.log(error);

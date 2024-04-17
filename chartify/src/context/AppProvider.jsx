@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { getTime } from "../utils/utils";
 
 export const AppContext = createContext();
 
@@ -96,15 +97,40 @@ export const AppProvider = ({ children }) => {
   };
 
   // Fetch data
-  const fetchData = async () => {
+  const fetchData = async (
+    filterMethods = {
+      Age: "all",
+      Gender: "all",
+      StartDate: "2022-10-04",
+      EndDate: "2022-10-29",
+    }
+  ) => {
     try {
-      const response = await axios.get("http://localhost:5000/posts");
+      const response = await axios.get(
+        "http://localhost:5000/posts",
+        filterMethods
+      );
 
       if (response) {
         const data = response.data.data;
 
+        const { Age, Gender, StartDate, EndDate } = filterMethods;
+
+        const startTime = new Date(StartDate).getTime() - 2592000000;
+        const endTime = new Date(EndDate).getTime();
+
+        const filteredData = data
+          .filter((entry) => (Age === "all" ? true : entry.Age === Age))
+          .filter((entry) =>
+            Gender === "all" ? true : entry.Gender === Gender
+          )
+          .filter((entry) => {
+            const entryTime = getTime(entry.Day);
+            return entryTime >= startTime && entryTime <= endTime;
+          });
+
         // Processing data for bar chart
-        const barData = data.reduce(
+        const barData = filteredData.reduce(
           (acc, curr) => {
             return {
               ...acc,
@@ -128,10 +154,10 @@ export const AppProvider = ({ children }) => {
           type: "SET_BAR_CHART_DATA",
           payload: { barDataValues, barDataLabels },
         });
-        // console.log({ barDataArray });
+        // console.log({ barDataValues });
 
         // Data for line chart
-        const lineData = data.reduce(
+        const lineData = filteredData.reduce(
           (acc, curr) => {
             if (acc.A[curr.Day]) {
               return {
