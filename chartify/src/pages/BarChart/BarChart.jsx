@@ -14,7 +14,6 @@ import {
   plugins,
   elements,
 } from "chart.js";
-import { getDate, getTime } from "../../utils/utils";
 
 ChartJS.register(
   CategoryScale,
@@ -99,7 +98,7 @@ const BarChart = () => {
   const filterGenderParam = searchParams.get("Gender") ?? "all";
   // console.log({ filterGenderParam });
 
-  const filterStartDateParam = searchParams.get("StartDate") ?? "2022-10-04";
+  const filterStartDateParam = searchParams.get("StartDate") ?? "2022-10-03";
 
   const filterEndDateParam = searchParams.get("EndDate") ?? "2022-10-29";
 
@@ -114,7 +113,12 @@ const BarChart = () => {
 
   // Fetching Data
   useEffect(() => {
-    fetchData();
+    fetchData({
+      Age: filterAgeParam,
+      Gender: filterGenderParam,
+      StartDate: filterStartDateParam,
+      EndDate: filterEndDateParam,
+    });
   }, []);
 
   return (

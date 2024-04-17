@@ -10,6 +10,7 @@ const initialState = {
   userDetails: {},
   barChartData: [],
   lineChartData: {},
+  path: "/",
 };
 
 export const AppProvider = ({ children }) => {
@@ -42,6 +43,19 @@ export const AppProvider = ({ children }) => {
         return {
           ...state,
           lineChartData: action.payload,
+        };
+
+      case "SET_CHART_DATA":
+        return {
+          ...state,
+          barChartData: action.payload.barChartData,
+          lineChartData: action.payload.lineChartData,
+        };
+
+      case "STORE_PATH":
+        return {
+          ...state,
+          path: action.payload,
         };
 
       default:
@@ -84,7 +98,7 @@ export const AppProvider = ({ children }) => {
 
       if (status === 200) {
         dispatch({ type: "SET_USER", payload: { user: data.user } });
-        navigate("/");
+        navigate(appData.path);
       }
 
       if (status === 401) {
@@ -116,7 +130,7 @@ export const AppProvider = ({ children }) => {
 
         const { Age, Gender, StartDate, EndDate } = filterMethods;
 
-        const startTime = new Date(StartDate).getTime() - 2592000000;
+        const startTime = new Date(StartDate).getTime();
         const endTime = new Date(EndDate).getTime();
 
         const filteredData = data
@@ -126,7 +140,7 @@ export const AppProvider = ({ children }) => {
           )
           .filter((entry) => {
             const entryTime = getTime(entry.Day);
-            return entryTime >= startTime && entryTime <= endTime;
+            return startTime <= entryTime && entryTime <= endTime;
           });
 
         // Processing data for bar chart
@@ -150,10 +164,10 @@ export const AppProvider = ({ children }) => {
           (value / data.length).toFixed(0)
         );
 
-        dispatch({
-          type: "SET_BAR_CHART_DATA",
-          payload: { barDataValues, barDataLabels },
-        });
+        // dispatch({
+        //   type: "SET_BAR_CHART_DATA",
+        //   payload: { barDataValues, barDataLabels },
+        // });
         // console.log({ barDataValues });
 
         // Data for line chart
@@ -220,7 +234,15 @@ export const AppProvider = ({ children }) => {
           { A: {}, B: {}, C: {}, D: {}, E: {}, F: {} }
         );
 
-        dispatch({ type: "SET_LINE_CHART_DATA", payload: lineData });
+        // dispatch({ type: "SET_LINE_CHART_DATA", payload: lineData });
+
+        dispatch({
+          type: "SET_CHART_DATA",
+          payload: {
+            barChartData: { barDataValues, barDataLabels },
+            lineChartData: lineData,
+          },
+        });
 
         // console.log({ lineData });
       }

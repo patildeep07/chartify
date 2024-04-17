@@ -20,6 +20,7 @@ function App() {
 
       <Routes>
         {/* Bar Chart navigation */}
+
         {isLoggedIn && (
           <Route
             path="/"

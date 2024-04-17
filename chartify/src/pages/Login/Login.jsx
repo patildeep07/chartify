@@ -1,14 +1,20 @@
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../../context/AppProvider";
 
 const Login = () => {
-  const { loginUser } = useContext(AppContext);
+  const { loginUser, dispatch } = useContext(AppContext);
   // Logic
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
   });
+
+  // History
+  useEffect(() => {
+    const path = window.location.href.replace("http://localhost:3000", "");
+    dispatch({ type: "STORE_PATH", payload: path });
+  }, []);
 
   const loginHandler = (e) => {
     e.preventDefault();
