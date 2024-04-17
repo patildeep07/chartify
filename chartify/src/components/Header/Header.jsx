@@ -42,7 +42,7 @@ const Header = () => {
             )}
 
             {isLoggedIn && (
-              <NavLink style={activeStyles} to={"/line-chart"}>
+              <NavLink style={activeStyles} to={"/line-chart/C"}>
                 LineChart
               </NavLink>
             )}

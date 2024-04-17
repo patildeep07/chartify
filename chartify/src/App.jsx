@@ -46,7 +46,7 @@ function App() {
         {/* Line Chart navigation */}
         {isLoggedIn && (
           <Route
-            path="/line-chart"
+            path="/line-chart/:featureId"
             element={
               <Suspense fallback={<Loading />}>
                 <LineChart />

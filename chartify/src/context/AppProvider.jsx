@@ -161,7 +161,7 @@ export const AppProvider = ({ children }) => {
 
         const barDataLabels = Object.keys(barData);
         const barDataValues = Object.values(barData).map((value) =>
-          (value / data.length).toFixed(0)
+          (value / filteredData.length).toFixed(0)
         );
 
         // dispatch({

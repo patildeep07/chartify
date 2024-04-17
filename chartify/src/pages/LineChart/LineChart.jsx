@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { AppContext } from "../../context/AppProvider";
+import { useParams } from "react-router";
 
 ChartJS.register(
   CategoryScale,
@@ -27,17 +28,19 @@ const LineChart = () => {
   const { appData } = useContext(AppContext);
 
   const { lineChartData } = appData;
-  // console.log({ lineChartData });
 
-  const lineDataOfA = lineChartData.A;
-  // console.log({ lineDataOfA });
+  // UseParams
+  const { featureId } = useParams();
+
+  const lineData = lineChartData[featureId];
+  // console.log({ lineData });
 
   // Labels
-  const lineDataLabel = Object.keys(lineDataOfA);
+  const lineDataLabel = Object.keys(lineData);
   // console.log({ lineDataLabel });
 
   // Values
-  const lineDataValues = Object.values(lineDataOfA).reduce((acc, curr) => {
+  const lineDataValues = Object.values(lineData).reduce((acc, curr) => {
     const average = (
       curr.reduce((acc, currentValue) => acc + Number(currentValue), 0) /
       curr.length
@@ -63,7 +66,7 @@ const LineChart = () => {
       },
       title: {
         display: true,
-        text: "Feature Analysis",
+        text: `Feature Analysis of ${featureId}`,
       },
     },
   };
