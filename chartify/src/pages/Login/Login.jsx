@@ -12,12 +12,9 @@ const Login = () => {
 
   // History
   useEffect(() => {
-    const path = window.location.href.replace(
-      "http://localhost:3000",
-      "" || "https://chartifyjs.netlify.app",
-      ""
-    );
-    dispatch({ type: "STORE_PATH", payload: path });
+    const path = window.location.href.replace("http://localhost:3000/", "");
+    const prodPath = path.replace("https://chartifyjs.netlify.app", "");
+    dispatch({ type: "STORE_PATH", payload: prodPath });
   }, []);
 
   const loginHandler = (e) => {
