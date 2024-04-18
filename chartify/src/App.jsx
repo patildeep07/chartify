@@ -16,6 +16,8 @@ const LineChart = lazy(() => import("./pages/LineChart/LineChart"));
 const Signup = lazy(() => import("./pages/Signup/Signup"));
 
 function App() {
+  window.document.title = "Chartify";
+
   const { appData } = useContext(AppContext);
   const { isLoggedIn } = appData;
   return (

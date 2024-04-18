@@ -77,7 +77,7 @@ export const AppProvider = ({ children }) => {
   const createNewUser = async (userDetails) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/users/signup",
+        "https://chartify-i7z8.onrender.com/users/signup",
         userDetails
       );
 
@@ -99,7 +99,7 @@ export const AppProvider = ({ children }) => {
   const loginUser = async (userDetails) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/users/login",
+        "https://chartify-i7z8.onrender.com/users/login",
         userDetails
       );
 
@@ -139,7 +139,7 @@ export const AppProvider = ({ children }) => {
   ) => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/posts",
+        "https://chartify-i7z8.onrender.com/posts",
         filterMethods
       );
 
