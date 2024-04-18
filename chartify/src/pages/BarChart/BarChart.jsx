@@ -169,9 +169,7 @@ const BarChart = () => {
   // Remove filter cookies
   const resetPreferences = () => {
     Cookies.remove("filters");
-    toast.success(
-      "Please apply filters to load the data, as preferences have been removed."
-    );
+    toast.success("Preferences removed.");
 
     fetchData(defaultFilters);
   };
