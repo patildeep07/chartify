@@ -1,7 +1,11 @@
-import React, { memo, useContext, useEffect } from "react";
-import { useSearchParams, createSearchParams } from "react-router-dom";
+import React, { memo, useContext, useEffect, useRef } from "react";
+import {
+  useSearchParams,
+  createSearchParams,
+  useNavigate,
+} from "react-router-dom";
 import { AppContext } from "../../context/AppProvider";
-import { Bar } from "react-chartjs-2";
+import { Bar, getElementAtEvent } from "react-chartjs-2";
 
 import {
   Chart as ChartJS,
@@ -27,6 +31,9 @@ ChartJS.register(
 );
 
 const BarChart = () => {
+  // Navigation
+  const navigate = useNavigate();
+
   // Context
   const { fetchData, appData } = useContext(AppContext);
   const { barChartData } = appData;
@@ -49,11 +56,6 @@ const BarChart = () => {
       legend: {
         display: false,
       },
-    },
-    onClick: function (evt, element) {
-      if (element.length > 0) {
-        console.log(element);
-      }
     },
   };
 
@@ -89,6 +91,18 @@ const BarChart = () => {
 
   // Get curr event
 
+  const chartRef = useRef();
+  const barClickHandler = (e) => {
+    if (getElementAtEvent(chartRef.current, e).length > 0) {
+      const dataIndex = getElementAtEvent(chartRef.current, e)[0].index;
+      const element = data.labels[dataIndex];
+
+      console.log({ element });
+      navigate(`/line-chart/${element}`);
+    }
+  };
+
+  // Filters:
   // Using url for filters
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -126,7 +140,12 @@ const BarChart = () => {
       <h1 className="font-semibold text-3xl">Bar Chart</h1>
 
       <div className="min-w-[80%] max-w-[95%]  sm:min-h-[80dvh]">
-        <Bar data={data} options={options} />
+        <Bar
+          data={data}
+          options={options}
+          onClick={barClickHandler}
+          ref={chartRef}
+        />
       </div>
 
       {/* Filters */}

@@ -98,7 +98,12 @@ export const AppProvider = ({ children }) => {
 
       if (status === 200) {
         dispatch({ type: "SET_USER", payload: { user: data.user } });
-        navigate(appData.path);
+
+        if (appData.path === "/login") {
+          navigate("/");
+        } else {
+          navigate(appData.path);
+        }
       }
 
       if (status === 401) {
