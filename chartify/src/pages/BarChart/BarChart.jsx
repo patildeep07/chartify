@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { AppContext } from "../../context/AppProvider";
 import { Bar, getElementAtEvent } from "react-chartjs-2";
+import Cookies from "js-cookie";
 
 import {
   Chart as ChartJS,
@@ -18,6 +19,7 @@ import {
   plugins,
   elements,
 } from "chart.js";
+import { toast } from "react-toastify";
 
 ChartJS.register(
   CategoryScale,
@@ -103,20 +105,42 @@ const BarChart = () => {
   };
 
   // Filters:
+  const filterCookie = Cookies.get("filters");
+  const filterCookieJson = filterCookie ? JSON.parse(filterCookie) : {};
+
   // Using url for filters
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filterAgeParam = searchParams.get("Age") ?? "all";
+  // Default filters
+  const defaultFilters = {
+    Age: "all",
+    Gender: "all",
+    StartDate: "2022-10-03",
+    EndDate: "2022-10-29",
+  };
+
+  const filterAgeParam =
+    searchParams.get("Age") ?? filterCookieJson.Age ?? defaultFilters.Age;
   // console.log({ filterAgeParam });
 
-  const filterGenderParam = searchParams.get("Gender") ?? "all";
+  const filterGenderParam =
+    searchParams.get("Gender") ??
+    filterCookieJson.Gender ??
+    defaultFilters.Gender;
   // console.log({ filterGenderParam });
 
-  const filterStartDateParam = searchParams.get("StartDate") ?? "2022-10-03";
+  const filterStartDateParam =
+    searchParams.get("StartDate") ??
+    filterCookieJson.StartDate ??
+    defaultFilters.StartDate;
 
-  const filterEndDateParam = searchParams.get("EndDate") ?? "2022-10-29";
+  const filterEndDateParam =
+    searchParams.get("EndDate") ??
+    filterCookieJson.EndDate ??
+    defaultFilters.EndDate;
 
-  const filterHandler = () => {
+  // get Data
+  const getData = () => {
     fetchData({
       Age: filterAgeParam,
       Gender: filterGenderParam,
@@ -125,14 +149,45 @@ const BarChart = () => {
     });
   };
 
+  const filterHandler = () => {
+    getData();
+
+    // Pushing filters to cookies
+    Cookies.set(
+      "filters",
+      JSON.stringify({
+        Age: filterAgeParam,
+        Gender: filterGenderParam,
+        StartDate: filterStartDateParam,
+        EndDate: filterEndDateParam,
+      })
+    );
+
+    toast.success("Applied filters!");
+  };
+
+  // Remove filter cookies
+  const resetPreferences = () => {
+    Cookies.remove("filters");
+    toast.success(
+      "Please apply filters to load the data, as preferences have been removed."
+    );
+
+    fetchData(defaultFilters);
+  };
+
+  // Share Url
+  const shareUrl = () => {
+    const linkToCopy = window.location.href;
+    navigator.clipboard.writeText(linkToCopy);
+    toast.success("Link copied!");
+  };
+
   // Fetching Data
   useEffect(() => {
-    fetchData({
-      Age: filterAgeParam,
-      Gender: filterGenderParam,
-      StartDate: filterStartDateParam,
-      EndDate: filterEndDateParam,
-    });
+    // Fetching filter cookies
+
+    getData();
   }, []);
 
   return (
@@ -200,7 +255,7 @@ const BarChart = () => {
             type="date"
             min={"2022-10-04"}
             max={"2022-10-29"}
-            defaultValue={"2022-10-04"}
+            defaultValue={filterStartDateParam}
             onChange={(e) =>
               setSearchParams(
                 createSearchParams({
@@ -221,7 +276,7 @@ const BarChart = () => {
             type="date"
             min={"2022-10-04"}
             max={"2022-10-29"}
-            defaultValue={"2022-10-29"}
+            defaultValue={filterEndDateParam}
             onChange={(e) =>
               setSearchParams(
                 createSearchParams({
@@ -237,12 +292,28 @@ const BarChart = () => {
         </div>
       </div>
 
-      <button
-        onClick={filterHandler}
-        className="border font-semibold rounded-sm bg-slate-300 hover:bg-slate-400 transition-all ease-in-out duration-500 border-slate-900 px-3 py-2"
-      >
-        Apply Filter
-      </button>
+      <div className="flex gap-3 flex-wrap">
+        <button
+          onClick={filterHandler}
+          className="border font-semibold rounded-sm bg-slate-300 hover:bg-slate-400 transition-all ease-in-out duration-500 border-slate-900 px-3 py-2"
+        >
+          Apply Filter
+        </button>
+
+        <button
+          onClick={resetPreferences}
+          className="border font-semibold rounded-sm bg-slate-300 hover:bg-slate-400 transition-all ease-in-out duration-500 border-slate-900 px-3 py-2"
+        >
+          Reset Preferences
+        </button>
+
+        <button
+          onClick={shareUrl}
+          className="border font-semibold rounded-sm bg-slate-300 hover:bg-slate-400 transition-all ease-in-out duration-500 border-slate-900 px-3 py-2"
+        >
+          Share URL
+        </button>
+      </div>
     </div>
   );
 };

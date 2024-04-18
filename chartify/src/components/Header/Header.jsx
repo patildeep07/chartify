@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { memo } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppProvider";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 const Header = () => {
   // Context
@@ -42,7 +44,15 @@ const Header = () => {
             )}
 
             {isLoggedIn && (
-              <NavLink onClick={() => dispatch({ type: "LOGOUT_USER" })}>
+              <NavLink
+                onClick={() => {
+                  dispatch({ type: "LOGOUT_USER" });
+                  Cookies.remove("isLoggedIn");
+                  Cookies.remove("user");
+
+                  toast.success("User logged out!");
+                }}
+              >
                 Logout
               </NavLink>
             )}

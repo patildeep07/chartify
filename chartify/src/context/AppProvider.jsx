@@ -2,19 +2,27 @@ import { createContext, useReducer } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { getTime } from "../utils/utils";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 export const AppContext = createContext();
 
-const initialState = {
-  isLoggedIn: false,
-  userDetails: {},
-  barChartData: [],
-  lineChartData: {},
-  path: "/",
-};
-
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
+
+  // Get Cookies
+  const loggedInState = Boolean(Cookies.get("isLoggedIn"));
+  const userState = Cookies.get("user");
+  const userStateJson = userState ? JSON.parse(userState) : null;
+
+  // Initial state
+  const initialState = {
+    isLoggedIn: loggedInState ?? false,
+    userDetails: userStateJson ?? {},
+    barChartData: [],
+    lineChartData: {},
+    path: "/",
+  };
 
   const reducerFunction = (state, action) => {
     // console.log({ state, action });
@@ -79,6 +87,7 @@ export const AppProvider = ({ children }) => {
 
       if (status === 201) {
         console.log(data.message, data.newUser);
+        toast.success("Registered. Proceed to log in!");
         navigate("/login");
       }
     } catch (error) {
@@ -98,6 +107,10 @@ export const AppProvider = ({ children }) => {
 
       if (status === 200) {
         dispatch({ type: "SET_USER", payload: { user: data.user } });
+        Cookies.set("isLoggedIn", true);
+        Cookies.set("user", JSON.stringify(data.user));
+
+        toast.success("Logged In");
 
         if (appData.path === "/login") {
           navigate("/");
