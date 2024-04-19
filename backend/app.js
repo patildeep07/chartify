@@ -25,7 +25,7 @@ app.use("/posts", PostRouter);
 
 // Handling GET request
 app.get("/", (req, res) => {
-  res.send("Hello");
+  res.json({ message: "Connected" });
 });
 
 // Port Number

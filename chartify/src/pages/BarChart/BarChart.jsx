@@ -192,7 +192,7 @@ const BarChart = () => {
     <div className="my-10 flex justify-center items-center flex-col gap-10">
       <h1 className="font-semibold text-3xl">Bar Chart</h1>
 
-      <div className="min-w-[80%] max-w-[95%]  sm:min-h-[80dvh]">
+      <div className="min-w-[80%] max-w-[95%] sm:min-h-[60dvh] sm:max-h-[70dvh] flex justify-center">
         <Bar
           data={data}
           options={options}

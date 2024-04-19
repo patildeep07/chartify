@@ -22,6 +22,7 @@ export const AppProvider = ({ children }) => {
     barChartData: [],
     lineChartData: {},
     path: "/",
+    serverStatus: "Trying to connect...",
   };
 
   const reducerFunction = (state, action) => {
@@ -66,12 +67,34 @@ export const AppProvider = ({ children }) => {
           path: action.payload,
         };
 
+      case "UPDATE_SERVER_STATUS":
+        return {
+          ...state,
+          serverStatus: action.payload,
+        };
+
       default:
         return state;
     }
   };
 
   const [appData, dispatch] = useReducer(reducerFunction, initialState);
+
+  // Boot server
+
+  const bootServer = async () => {
+    try {
+      const response = await axios.get("https://chartify-i7z8.onrender.com/");
+
+      if (response) {
+        dispatch({ type: "UPDATE_SERVER_STATUS", payload: "Connected!" });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Server down!");
+      dispatch({ type: "UPDATE_SERVER_STATUS", payload: "Not connected!" });
+    }
+  };
 
   // Create new user
   const createNewUser = async (userDetails) => {
@@ -271,7 +294,14 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ appData, dispatch, createNewUser, loginUser, fetchData }}
+      value={{
+        appData,
+        dispatch,
+        createNewUser,
+        loginUser,
+        fetchData,
+        bootServer,
+      }}
     >
       {children}
     </AppContext.Provider>
