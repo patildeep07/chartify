@@ -31,15 +31,12 @@ function App() {
     <div className="App">
       <Header />
 
-      <h1 className={`text-center my-4 sm:text-right mx-10 `}>
+      <h1
+        className={`text-center my-4 sm:text-right mx-10 `}
+        style={{ display: serverStatus === "Connected!" ? "none" : "block" }}
+      >
         Server status:{" "}
-        <span
-          className={`${
-            serverStatus === "Connected!" ? "text-green-500" : "text-red-500"
-          } font-semibold`}
-        >
-          {serverStatus}
-        </span>
+        <span className={`text-red-500 font-semibold`}>{serverStatus}</span>
       </h1>
 
       <Routes>

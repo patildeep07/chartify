@@ -22,7 +22,7 @@ export const AppProvider = ({ children }) => {
     barChartData: [],
     lineChartData: {},
     path: "/",
-    serverStatus: "Trying to connect...",
+    serverStatus: "Connecting to database...",
   };
 
   const reducerFunction = (state, action) => {
